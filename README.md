@@ -7,4 +7,6 @@ It will appear a list of all the animals that you currently posess and when tapp
 You can add animals: name, breed, photo, age and at each animal, a list will appear in which you can add anything you want to do for them.
 You can also delete, update animals/tasks and you can see a chart of animals and all their needs. You can also attach deadlines to each task and a notification will appear in case your close to it.
 
+You can also act like a "babysitter" from someone's pet. That means you can be assigned the animals you need to take care of, and the tasks you need to acquire for them. It means the application has two roles for the user.
+
 I'll add more features in the future. 
