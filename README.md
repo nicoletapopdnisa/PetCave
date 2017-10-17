@@ -10,3 +10,8 @@ You can also delete, update animals/tasks and you can see a chart of animals and
 You can also act like a "babysitter" from someone's pet. That means you can be assigned the animals you need to take care of, and the tasks you need to acquire for them. It means the application has two roles for the user.
 
 I'll add more features in the future. 
+
+
+By Nicoleta-Denisa Pop,
+    UBB CS, group 936
+    pnie1983@scs.ubbcluj.ro
