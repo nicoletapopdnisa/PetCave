@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.nicol.petcave.TasksPerPet">
+
+
+    <TextView
+        android:id="@+id/textViewTasksForPetName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:text="TextView" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="307dp"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/buttonCreateNewTask"
+        android:layout_centerHorizontal="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/scrollView2"
+        android:orientation="vertical"
+        android:id="@+id/linearLayoutTasks" />
+    </ScrollView>
+    <TextView
+        android:id="@+id/textViewNoOfTasks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textViewTasksForPetName"
+        android:layout_alignBottom="@+id/textViewTasksForPetName"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/buttonCreateNewTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/textViewTasksForPetName"
+        android:layout_alignBottom="@+id/textViewTasksForPetName"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="36dp"
+        android:layout_marginRight="36dp"
+        android:text="New Task" />
+
+</RelativeLayout>
