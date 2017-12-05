@@ -15,5 +15,13 @@
 
         <requestFocus />
     </EditText>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextTaskDescription"
+        android:id="@+id/editTextTaskDeadline"
+        android:inputType="date"
+        android:hint="Task date"
+        />
 
 </RelativeLayout>

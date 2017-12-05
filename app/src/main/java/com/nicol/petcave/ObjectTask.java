@@ -7,6 +7,7 @@ package com.nicol.petcave;
 public class ObjectTask {
     int id;
     String description;
+    String deadline;
     int petId;
 
     public ObjectTask() {
@@ -18,6 +19,7 @@ public class ObjectTask {
         return "ObjectTask{" +
                 "id=" + id +
                 ", description='" + description + '\'' +
+                ", deadline='" + deadline + '\'' +
                 ", petId=" + petId +
                 '}';
     }

@@ -33,6 +33,7 @@ public class TableControllerTasks extends DatabaseHandler {
         ContentValues values = new ContentValues();
 
         values.put("description", task.description);
+        values.put("deadline", task.deadline);
         values.put("petID", task.petId);
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -84,10 +85,12 @@ public class TableControllerTasks extends DatabaseHandler {
 
                 int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex("id")));
                 String description = cursor.getString(cursor.getColumnIndex("description"));
+                String deadline = cursor.getString(cursor.getColumnIndex("deadline"));
 
                 ObjectTask objectTask = new ObjectTask();
                 objectTask.id = id;
                 objectTask.description = description;
+                objectTask.deadline = deadline;
                 objectTask.petId = petId;
 
                 recordsList.add(objectTask);

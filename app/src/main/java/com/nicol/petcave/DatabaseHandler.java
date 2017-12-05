@@ -28,6 +28,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sql = "CREATE TABLE tasks " +
                 "( id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "description TEXT, " +
+                "deadline TEXT, " +
                 "petID INTEGER, " +
                 "FOREIGN KEY (petID) REFERENCES pets(id) ON DELETE CASCADE )";
         db.execSQL(sql);
