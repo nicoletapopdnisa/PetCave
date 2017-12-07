@@ -12,6 +12,8 @@ You can also act like a "babysitter" from someone's pet. That means you can be a
 I'll add more features in the future. 
 
 
+!!!THE PROJECTS ARE EVENTUALLY ON DIFFERENT BRANCHES: THE ANDROID PROJECT IS IN THE android BRANCH, AND THE REACT-NATIVE IN react-native!!!
+
 By Nicoleta-Denisa Pop,
     UBB CS, group 936
     pnie1983@scs.ubbcluj.ro
