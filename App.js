@@ -1,16 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, Modal, Button, TouchableHighlight, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, FlatList, TextInput, Modal, Button, TouchableHighlight, ScrollView, AsyncStorage, Alert, Picker } from 'react-native';
 import Communications from 'react-native-communications';
-
+import {Bar} from 'react-native-pathjs-charts';
 
 export default class App extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { name: 'Pet name',
-                       breed: 'Pet breed',
-                       age: 'Pet age',
-                       gender: 'Pet gender',
-                       color: 'Pet color',
+        this.state = {  name: 'Pet name',
+                        breed: 'Pet breed',
+                        age: 'Pet age',
+                        gender: 'Pet gender',
+                        color: 'Pet color',
                         description: 'task description',
                         mainModalVisible: false,
                         taskModalVisible: false,
@@ -33,6 +33,38 @@ export default class App extends React.Component {
                             {id:5, c:9,key:"task9"}, {id:5, c:10,key:"task10"},]};
     }
 
+    componentDidMount() {
+        this._updateEntityLists();
+    }
+
+     async _updateEntityLists() {
+
+        let response = await AsyncStorage.getItem("pets");
+        let petsList = await JSON.parse(response) || [];
+
+        if(petsList.length !== 0)
+        {
+            this.setState({pets:petsList});
+        }
+        else
+        {
+            AsyncStorage.setItem("pets", JSON.stringify(this.state.pets));
+        }
+
+        response = await AsyncStorage.getItem("tasks");
+        let tasksList = await JSON.parse(response) || [];
+
+
+        if(tasksList.length !== 0)
+        {
+            this.setState({tasks: tasksList});
+        }
+        else
+        {
+            AsyncStorage.setItem("tasks", JSON.stringify(this.state.tasks));
+        }
+     }
+
     setCurrentPetByName(name) {
         var size = this.state.pets.length;
 
@@ -44,11 +76,11 @@ export default class App extends React.Component {
     }
 
     getTasksByID() {
-        var size = this.state.tasks.length;
-        var tasksByID = [];
+        let size = this.state.tasks.length;
+        let tasksByID = [];
         for(var i = 0; i < size; i++) {
             if(this.state.tasks[i].id === this.state.currentPet) {
-                tasksByID.push({id:this.state.currentPet, key:this.state.tasks[i].key});
+                tasksByID.push({id:this.state.currentPet, key:this.state.tasks[i].key, c:this.state.tasks[i].c});
             }
         }
         return tasksByID;
@@ -87,35 +119,43 @@ export default class App extends React.Component {
                ", Color=" + this.state.color;
     }
 
-    isInArray(name) {
-        var count = this.state.pets.length;
+     async isInArray(name) {
+        let response = await AsyncStorage.getItem('pets');
+        let pets = JSON.parse(response);
+        var count = pets.length;
         for(var i = 0; i < count ; i++) {
-            if(this.state.pets[i].key === name) {
+            if(pets[i].key === name) {
                 return i;
             }
         }
         return -1;
     }
 
-    updatePet(index) {
-        this.state.pets[index].key = this.state.name;
-        this.state.pets[index].breed = this.state.breed;
-        this.state.pets[index].age = this.state.age;
-        this.state.pets[index].gender = this.state.gender;
-        this.state.pets[index].color = this.state.color;
+    async updatePet(index) {
+        let response = await AsyncStorage.getItem('pets');
+        let pets = await JSON.parse(response);
+        pets[index].key = this.state.name;
+        pets[index].breed = this.state.breed;
+        pets[index].age = this.state.age;
+        pets[index].gender = this.state.gender;
+        pets[index].color = this.state.color;
 
+        this.setState({pets: pets});
+        AsyncStorage.setItem('pets', JSON.stringify(pets));
     }
 
-    addToPets() {
+    async addToPets() {
         if(this.state.name !== 'Pet name' && this.state.breed !== 'Pet breed' &&
             this.state.age !== 'Pet age' && this.state.gender !== 'Pet gender' && this.state.color !== 'Pet color') {
 
-            var index = this.isInArray(this.state.name);
+            let index = await this.isInArray(this.state.name);
             if(index !== -1) {
                 return "already exists";
             }
+            let response = await AsyncStorage.getItem('pets');
+            let pets = await JSON.parse(response);
             this.state.itemsCount = this.state.itemsCount+1;
-            this.state.pets.push({
+            pets.push({
                 key: this.state.name,
                 id: this.state.itemsCount,
                 breed: this.state.breed,
@@ -123,6 +163,10 @@ export default class App extends React.Component {
                 gender: this.state.gender,
                 color: this.state.color
             });
+
+            this.setState({pets: pets});
+            AsyncStorage.setItem('pets', JSON.stringify(pets));
+
             return "ok";
         }
         else {
@@ -131,22 +175,31 @@ export default class App extends React.Component {
 
     }
 
-    addToTasks() {
+    async addToTasks() {
         if(this.state.description !== 'task description') {
             if(this.state.currentTask !== -1) {
-                this.updateTask(this.state.currentTask);
+                let index = this.isAlreadyTask(this.state.description);
+                if(index !== -1) {
+                    return "already exists";
+                }
+
+                await this.updateTask(this.state.currentTask);
                 return "updated";
             }
-            var index = this.isAlreadyTask(this.state.description);
-            if(index !== -1) {
-                return "already exists";
-            }
+
+            let response = await AsyncStorage.getItem('tasks');
+            let tasks = await JSON.parse(response);
             this.state.tasksCount = this.state.tasksCount + 1;
-            this.state.tasks.push({
+            tasks.push({
+
                 id: this.state.currentPet,
                 c: this.state.itemsCount,
                 key: this.state.description
             });
+
+            this.setState({tasks: tasks});
+            AsyncStorage.setItem('tasks', JSON.stringify(tasks));
+
             return "ok";
         }
         else {
@@ -154,13 +207,17 @@ export default class App extends React.Component {
         }
     }
 
-    updateTask(index) {
-        var size = this.state.tasks.length;
+    async updateTask(index) {
+        let response = await AsyncStorage.getItem('tasks');
+        let tasks = await JSON.parse(response);
+        var size = tasks.length;
         for(var i = 0; i < size; i++) {
-            if(this.state.tasks[i].c === index) {
-                this.state.tasks[i].key = this.state.description;
+            if(tasks[i].c === index) {
+                tasks[i].key = this.state.description;
             }
         }
+        this.setState({tasks: tasks});
+        AsyncStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
     isAlreadyTask(description) {
@@ -189,17 +246,191 @@ export default class App extends React.Component {
         this.state.currentTask = item.c;
     }
 
+    showAlert(item) {
+        Alert.alert(
+            'Delete '+item.key,
+            'Are you sure you want to delete this pet?',
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'YES', onPress: async () => await this.deleteAPet(item)},
+            ],
+            { cancelable: true }
+        )
+    }
+
+    showAlertTasks(item)
+    {
+        Alert.alert(
+            'Delete '+item.key,
+            'Are you sure you want to delete this task?',
+            [
+                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+                {text: 'YES', onPress: async () => await this.deleteATask(item)},
+            ],
+            { cancelable: true }
+        )
+    }
+
+    async deleteATask(item)
+    {
+        let response = await AsyncStorage.getItem("tasks");
+        let tasks = await JSON.parse(response);
+
+        for(var i = 0; i < tasks.length; i++)
+        {
+            if(tasks[i].c === item.c)
+            {
+                tasks.splice(i, 1);
+            }
+        }
+
+        console.log(tasks);
+        this.setState({tasks:tasks});
+        AsyncStorage.setItem("tasks", JSON.stringify(this.state.tasks));
+
+    }
+
+    async deleteAPet(item)
+    {
+        let response = await AsyncStorage.getItem("pets");
+        let pets = await JSON.parse(response);
+
+        var index = pets.indexOf(item);
+
+        await this.deleteTasksAssociatedFromTasks(item);
+
+        pets.splice(index, 1);
+
+        this.setState({pets:pets});
+        AsyncStorage.setItem("pets", JSON.stringify(this.state.pets));
+
+
+    }
+
+    async deleteTasksAssociatedFromTasks(item)
+    {
+        let response = await AsyncStorage.getItem("tasks");
+        let tasks = await JSON.parse(response);
+
+        for(var i = 0; i < tasks.length; i++)
+        {
+            if(tasks[i].id === item.id)
+            {
+                tasks.splice(i, 1);
+            }
+        }
+
+        this.setState({tasks:tasks});
+        AsyncStorage.setItem("tasks", JSON.stringify(this.state.tasks));
+    }
+
+    getDataForChart()
+    {
+        let pets = this.state.pets;
+        let tasks = this.state.tasks;
+
+        let data = [];
+
+        for(var i = 0; i < pets.length; i++)
+        {
+            let elem=[];
+            var count = 0;
+            for(var j = 0; j < tasks.length; j++)
+            {
+                if(tasks[j].id === pets[i].id)
+                {
+                    count++;
+                }
+            }
+            elem.push({"nrTasks":count, "name": pets[i].key});
+            data.push(elem);
+        }
+        return data;
+    }
+
   render() {
       this.state.itemsCount = this.state.pets.length;
       this.state.tasksCount = this.state.tasks.length;
+
+      let data = [
+          [{
+              "nrTasks": 9,
+              "name": "Milka"
+          },],
+          [{
+              "nrTasks": 9,
+              "name": "Coco"
+          },],
+          [{
+              "nrTasks": 9,
+              "name": "Lola"
+          },]
+      ];
+      let datz = [];
+      datz = this.getDataForChart();
+      console.log(datz);
+
+      let options = {
+          width: 210,
+          height: 270,
+          margin: {
+              top: 0,
+              left: 50,
+              bottom: 0,
+              right: 20
+          },
+          padding: {
+              top: -70
+          },
+          color: '#2980B9',
+          gutter: 20,
+          animate: {
+              type: 'oneByOne',
+              duration: 200,
+              fillTransition: 3
+          },
+          axisX: {
+              showAxis: true,
+              showLines: true,
+              showLabels: true,
+              showTicks: true,
+              zeroAxis: false,
+              orient: 'bottom',
+              label: {
+                  fontFamily: 'Arial',
+                  fontSize: 8,
+                  fontWeight: true,
+                  fill: '#34495E',
+                  rotate: 45
+              }
+          },
+          axisY: {
+              showAxis: true,
+              showLines: true,
+              showLabels: true,
+              showTicks: true,
+              zeroAxis: false,
+              orient: 'left',
+              label: {
+                  fontFamily: 'Arial',
+                  fontSize: 8,
+                  fontWeight: true,
+                  fill: '#34495E'
+              }
+          }
+      };
+
+
       return (
           <View style={styles.container}>
               <ScrollView>
                   <FlatList
+                      style={{height: 200, marginLeft: 60}}
                       data={this.state.pets}
+                      keyExtractor={(item, index) => item.id}
                       renderItem={
                           ({item}) => <View>
-                              <Text style={{fontSize:20, color:"blue"}}>
+                              <Text style={{fontSize: 20, color: "blue"}}>
                                   {item.key}, {item.breed}, {item.gender}</Text>
                               <Button
                                   title={"View/Edit"}
@@ -209,19 +440,27 @@ export default class App extends React.Component {
                                   }}>
                               </Button>
                               <Button
-                                title={"Tasks"}
-                                onPress={() => {
-                                    this.settaskModalVisible(!this.state.taskModalVisible);
-                                    this.setCurrentPetByName(item.key);
-                                }
-                                }
+                                  title={"Tasks"}
+                                  onPress={() => {
+                                      this.settaskModalVisible(!this.state.taskModalVisible);
+                                      this.setCurrentPetByName(item.key);
+                                  }
+                                  }
+                              >
+                              </Button>
+                              <Button
+                                  title={"Delete pet"}
+                                  onPress={() => {
+                                      this.showAlert(item);
+                                  }
+                                  }
                               >
                               </Button>
 
-                                        </View>
+                          </View>
 
                       }
-                      extraData = {this.state}
+                      extraData={this.state}
                   >
                   </FlatList>
               </ScrollView>
@@ -230,81 +469,106 @@ export default class App extends React.Component {
                   animationType="slide"
                   transparent={false}
                   visible={this.state.mainModalVisible}
-                  onRequestClose={() => {alert("Main Modal was closed"); this.setmainModalVisible(!this.state.mainModalVisible); this.resetState()}}
+                  onRequestClose={() => {
+                      alert("Main Modal was closed");
+                      this.setmainModalVisible(!this.state.mainModalVisible);
+                      this.resetState()
+                  }}
               >
                   <ScrollView>
-                  <View style={{marginTop: 22}}>
-                      <View>
-                          <TextInput style={styles.inputText} onChangeText={(name) => this.setState({name})}
-                                     value={this.state.name}
-                          />
-                          <TextInput style={styles.inputText} onChangeText={(breed) => this.setState({breed})}
-                                     value={this.state.breed}
-                          />
-                          <TextInput style={styles.inputText} onChangeText={(age) => this.setState({age})}
-                                     value={this.state.age}
-                          />
-                          <TextInput style={styles.inputText} onChangeText={(gender) => this.setState({gender})}
-                                     value={this.state.gender}
-                          />
-                          <TextInput style={styles.inputText} onChangeText={(color) => this.setState({color})}
-                                     value={this.state.color}
-                          />
-                          <Button
-                          title={"Add new Pet/Edit existing Pet"}
-                          onPress={() => {
-                              this.setmainModalVisible(!this.state.mainModalVisible);
-                              var result = this.addToPets();
-                              if(result === "invalid data") {
-                                  alert("New data should not contain input text placeholders.");
-                              }
-                              else if(result === "already exists") {
-                                  this.updatePet(this.isInArray(this.state.name));
-                                  alert("Updated pet with name " + this.state.name);
-                              }
-                              else {
-                                  Communications.email(['nicodeni.pop96@gmail.com', 'nicodeni.pop96@gmail.com'],null,null,'New Pet ADDED-PetCave', this.getStateText());
-                              }
-                          }}>
-                      </Button>
+                      <View style={{marginTop: 22}}>
+                          <View>
+                              <TextInput style={styles.inputText} onChangeText={(name) => this.setState({name})}
+                                         value={this.state.name}
+                              />
+                              <TextInput style={styles.inputText} onChangeText={(breed) => this.setState({breed})}
+                                         value={this.state.breed}
+                              />
+                              <TextInput style={styles.inputText} onChangeText={(age) => this.setState({age})}
+                                         value={this.state.age}
+                              />
+                              <Picker
+                                  style={styles.inputText}
+                                  selectedValue={this.state.gender}
+                                  onValueChange={(itemValue, itemIndex) => this.setState({gender: itemValue})}>
+                                  <Picker.Item label="Male" value="Male"/>
+                                  <Picker.Item label="Female" value="Female"/>
+                              </Picker>
+                              <TextInput style={styles.inputText} onChangeText={(color) => this.setState({color})}
+                                         value={this.state.color}
+                              />
+                              <Button
+                                  title={"Add new Pet/Edit existing Pet"}
+                                  onPress={async () => {
+                                      this.setmainModalVisible(!this.state.mainModalVisible);
+                                      var result = await this.addToPets();
+                                      if (result === "invalid data") {
+                                          alert("New data should not contain input text placeholders.");
+                                      }
+                                      else if (result === "already exists") {
+                                          let index = await this.isInArray(this.state.name);
+                                          await this.updatePet(index);
+                                          alert("Updated pet with name " + this.state.name);
+                                      }
+                                      else {
+                                          Communications.email(['nicodeni.pop96@gmail.com', 'nicodeni.pop96@gmail.com'], null, null, 'New Pet ADDED-PetCave', this.getStateText());
+                                      }
+                                  }}>
+                              </Button>
 
+                          </View>
                       </View>
-                  </View>
                   </ScrollView>
               </Modal>
 
               <Modal animationType="slide"
                      transparent={false}
                      visible={this.state.taskModalVisible}
-                     onRequestClose={() => {alert("Task Modal was closed"); this.settaskModalVisible(!this.state.taskModalVisible); this.resetState()}}
+                     onRequestClose={() => {
+                         alert("Task Modal was closed");
+                         this.settaskModalVisible(!this.state.taskModalVisible);
+                         this.resetState()
+                     }}
               >
                   <View style={styles.container}>
-                  <ScrollView>
-                  <FlatList
-                    style={{marginLeft:20, marginTop:20}}
-                    data={this.getTasksByID()}
-                    renderItem={
-                        ({item}) =>
-                            <View>
-                                <Text style={{fontSize:20, color:"black"}}>
-                                    {item.key}</Text>
-                                <Button
-                                title={"View/Edit"}
-                                style={{width:10}}
-                                onPress={() => {this.settaskDetailModalVisible(!this.state.taskDetailModalVisible);
-                                                this.setFormAccordingToData(item)}}>
+                      <ScrollView>
+                          <FlatList
+                              style={{marginLeft: 20, marginTop: 20}}
+                              data={this.getTasksByID()}
+                              renderItem={
+                                  ({item}) =>
+                                      <View>
+                                          <Text style={{fontSize: 20, color: "black"}}>
+                                              {item.key}</Text>
+                                          <Button
+                                              title={"View/Edit"}
+                                              style={{width: 10}}
+                                              onPress={() => {
+                                                  this.settaskDetailModalVisible(!this.state.taskDetailModalVisible);
+                                                  this.setFormAccordingToData(item)
+                                              }}>
 
-                                </Button>
-                            </View>
-                        }
-                    extraData={this.state.tasks}
-                  >
-                  </FlatList>
-                  </ScrollView>
+                                          </Button>
+                                          <Button
+                                              title={"Delete Task"}
+                                              style={{width: 10}}
+                                              onPress={() => {
+                                                  this.showAlertTasks(item);
+                                              }}
+                                          >
+
+                                          </Button>
+                                      </View>
+                              }
+                              extraData={this.state.tasks}
+                          >
+                          </FlatList>
+                      </ScrollView>
                       <TouchableHighlight
                           style={styles.holder}
                           onPress={() => {
-                              this.settaskDetailModalVisible(true)
+                              this.settaskDetailModalVisible(true);
+                              this.resetTask();
                           }}>
                           <Text>Add Task Form</Text>
                       </TouchableHighlight>
@@ -315,7 +579,10 @@ export default class App extends React.Component {
                   animationType="slide"
                   transparent={false}
                   visible={this.state.taskDetailModalVisible}
-                  onRequestClose={() => {this.settaskDetailModalVisible(!this.state.taskDetailModalVisible); this.resetTask()}}
+                  onRequestClose={() => {
+                      this.settaskDetailModalVisible(!this.state.taskDetailModalVisible);
+                      this.resetTask()
+                  }}
               >
                   <View
                       style={styles.container}>
@@ -324,18 +591,18 @@ export default class App extends React.Component {
                       />
                       <Button
                           title={"Add new Task/Edit existing Task"}
-                          onPress={() => {
+                          onPress={async () => {
                               this.settaskDetailModalVisible(!this.state.taskDetailModalVisible);
 
-                              var result = this.addToTasks();
+                              let result = await this.addToTasks();
 
-                              if(result === "invalid data") {
+                              if (result === "invalid data") {
                                   alert("New data should not contain input text placeholders.");
                               }
-                              else if(result === "already exists") {
+                              else if (result === "already exists") {
                                   alert("This task already exists: " + this.state.description);
                               }
-                              else if(result === "updated") {
+                              else if (result === "updated") {
                                   alert("task updated with new description: " + this.state.description);
                               }
                               else {
@@ -347,17 +614,21 @@ export default class App extends React.Component {
               </Modal>
 
 
+              <Bar data={datz} options={options} accessorKey="nrTasks"/>
+
+
               <TouchableHighlight
                   style={styles.holder}
                   onPress={() => {
-                  this.setmainModalVisible(true);
-              }}>
+                      this.setmainModalVisible(true);
+                  }}>
                   <Text>Add Pet Form</Text>
               </TouchableHighlight>
 
+
               <Text style={styles.welcomeText}>Welcome to PetCave!</Text>
           </View>
-    );
+      );
   }
 }
 
@@ -381,5 +652,10 @@ const styles = StyleSheet.create({
     holder: {
         marginBottom: 40,
         marginLeft: 50,
+    },
+    chart: {
+        width: 20,
+        height: 20,
+        marginLeft:20
     },
 });
