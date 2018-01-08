@@ -14,6 +14,8 @@ I'll add more features in the future.
 
 !!!THE PROJECTS ARE EVENTUALLY ON DIFFERENT BRANCHES: THE ANDROID PROJECT IS IN THE android BRANCH, AND THE REACT-NATIVE IN react-native!!!
 
+!!THE ANDROID FINAL APP(LAB 7) IS AVAILABLE ON "Android" BRANCH!!
+
 By Nicoleta-Denisa Pop,
     UBB CS, group 936
     pnie1983@scs.ubbcluj.ro
