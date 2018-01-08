@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id = "@+id/adminLayout"
+    tools:context="com.nicol.petcave_final.AdminUserActivity">
+
+    <ImageView
+        android:layout_width="365dp"
+        android:layout_height="116dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/admin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/viewNrUsers"
+        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.571" />
+
+    <TextView
+        android:id="@+id/viewNrUsers"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:text="NR OF USERS: "
+        android:textColor="#FFF"
+        app:layout_constraintBottom_toTopOf="@+id/textNrUsers"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/textNrUsers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/viewNrUsers"
+        android:layout_marginLeft="20dp"
+        android:textColor="#FFF"
+        app:layout_constraintBottom_toBottomOf="@+id/viewNrUsers"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/viewNrPets"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@+id/textNrUsers"
+        android:layout_marginLeft="4dp"
+        android:text="NR OF PETS: "
+        android:textColor="#FFF"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/infoNrPets"
+        tools:layout_editor_absoluteY="222dp" />
+
+    <TextView
+        android:id="@+id/infoNrPets"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="#FFF"
+        android:layout_below="@+id/viewNrUsers"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/viewNrPets"
+        app:layout_constraintBottom_toTopOf="@+id/viewNrTasks"
+        tools:layout_editor_absoluteY="479dp" />
+
+    <TextView
+        android:id="@+id/viewNrTasks"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:layout_below="@+id/infoNrPets"
+        android:layout_marginLeft="4dp"
+        android:text="NR OF TASKS: "
+        android:textColor="#FFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.558" />
+
+    <TextView
+        android:id="@+id/infoNrTasks"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="#FFF"
+        android:layout_below="@+id/viewNrUsers"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.598" />
+
+    <Button
+        android:id="@+id/userManagementbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary"
+        android:text="User management"
+        android:textColor="@color/common_google_signin_btn_text_light_pressed"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infoNrTasks" />
+
+</android.support.constraint.ConstraintLayout>

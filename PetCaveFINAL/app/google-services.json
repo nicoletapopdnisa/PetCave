@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "273980047675",
+    "firebase_url": "https://petcavefinal.firebaseio.com",
+    "project_id": "petcavefinal",
+    "storage_bucket": "petcavefinal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273980047675:android:c3115ed96cbf071e",
+        "android_client_info": {
+          "package_name": "com.nicol.petcave_final"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273980047675-t588fs04p8nmjg9u2kpod97g1j3j2ujj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0xzUPl9fPPJh7vhoVhufLdK9R9hT3dCs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

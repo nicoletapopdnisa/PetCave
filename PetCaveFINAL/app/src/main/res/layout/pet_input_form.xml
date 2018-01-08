@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <EditText
+        android:id="@+id/editTextPetName"
+        android:textCursorDrawable="@null"
+        android:textColor="#c3bed8"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:hint="Pet Name"
+        android:singleLine="true" >
+
+        <requestFocus />
+    </EditText>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textPetBreed"
+        android:layout_below="@+id/editTextPetName"
+        android:text="Pet Breed:"/>
+    <Spinner
+        android:id="@+id/editTextPetBreed"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:singleLine="true"
+        android:layout_below="@+id/textPetBreed"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/editTextPetAge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Pet Age"
+        android:singleLine="true"
+        android:layout_below="@+id/editTextPetBreed"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/petGenderRadioGroup"
+        android:background="@drawable/common_google_signin_btn_icon_light_normal_background"
+        android:checkedButton="@+id/maleGenderRadioButton"
+        android:layout_below="@+id/editTextPetAge"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="134dp"
+        android:layout_marginStart="134dp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/maleGenderRadioButton"
+            android:text="Male" />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/femaleGenderRadioButton"
+            android:text="Female" />
+
+    </RadioGroup>
+
+
+    <EditText
+        android:id="@+id/editTextPetColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Pet Color"
+        android:singleLine="true"
+        android:layout_below="@+id/petGenderRadioGroup"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
